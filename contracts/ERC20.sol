@@ -125,6 +125,34 @@ contract ERC20 is
         return true;
     }
 
+    function burnFrom(address account, uint256 amount) public onlyBurner {
+        _burn(account, amount);
+        _approve(
+            account,
+            _msgSender(),
+            _allowances[account][_msgSender()].sub(
+                amount,
+                "ERC20: burn amount exceeds allowance"
+            )
+        );
+    }
+
+    function burn(uint256 amount) public {
+        _burn(_msgSender(), amount);
+    }
+
+    function _approve(
+        address owner,
+        address spender,
+        uint256 amount
+    ) internal {
+        require(owner != address(0), "ERC20: approve from the zero address");
+        require(spender != address(0), "ERC20: approve to the zero address");
+
+        _allowances[owner][spender] = amount;
+        emit Approval(owner, spender, amount);
+    }
+
     function _transfer(
         address sender,
         address recipient,
@@ -163,52 +191,4 @@ contract ERC20 is
         _totalSupply = _totalSupply.sub(amount);
         emit Transfer(account, address(0), amount);
     }
-
-    function _approve(
-        address owner,
-        address spender,
-        uint256 amount
-    ) internal {
-        require(owner != address(0), "ERC20: approve from the zero address");
-        require(spender != address(0), "ERC20: approve to the zero address");
-
-        _allowances[owner][spender] = amount;
-        emit Approval(owner, spender, amount);
-    }
-
-    function burnFrom(address account, uint256 amount) public onlyBurner {
-        _burn(account, amount);
-        _approve(
-            account,
-            _msgSender(),
-            _allowances[account][_msgSender()].sub(
-                amount,
-                "ERC20: burn amount exceeds allowance"
-            )
-        );
-    }
-
-    function burnMyToken(uint256 amount) public {
-        _burn(_msgSender(), amount);
-        _approve(
-            _msgSender(),
-            _msgSender(),
-            _allowances[_msgSender()][_msgSender()].sub(
-                amount,
-                "ERC20: burn amount exceeds allowance"
-            )
-        );
-    }
-
-    function _beforeTokenTransfer(
-        address from,
-        address to,
-        uint256 amount
-    ) internal virtual {}
-
-    function _afterTokenTransfer(
-        address from,
-        address to,
-        uint256 amount
-    ) internal virtual {}
 }

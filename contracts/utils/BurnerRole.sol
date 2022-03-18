@@ -31,17 +31,17 @@ contract BurnerRole is Context, AdminRole {
         _addBurner(account);
     }
 
-    function _addBurner(address account) internal {
-        _burners.add(account);
-        emit BurnerAdded(account);
-    }
-
     function renounceBurner() public {
         _removeBurner(_msgSender());
     }
 
     function removeBurner(address account) public onlyAdmin {
         _removeBurner(account);
+    }
+
+    function _addBurner(address account) internal {
+        _burners.add(account);
+        emit BurnerAdded(account);
     }
 
     function _removeBurner(address account) internal {

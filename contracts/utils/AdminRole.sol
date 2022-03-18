@@ -33,11 +33,6 @@ contract AdminRole is Context, Ownable {
         _addAdmin(account);
     }
 
-    function _addAdmin(address account) internal {
-        _admins.add(account);
-        emit AdminAdded(account);
-    }
-
     function renounceAdmin() public {
         _removeAdmin(_msgSender());
     }
@@ -45,6 +40,11 @@ contract AdminRole is Context, Ownable {
     function removeAdmin(address account) public onlyOwner {
         _admins.remove(account);
         emit AdminRemoved(account);
+    }
+
+    function _addAdmin(address account) internal {
+        _admins.add(account);
+        emit AdminAdded(account);
     }
 
     function _removeAdmin(address account) internal {
