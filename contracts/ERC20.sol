@@ -3,10 +3,13 @@ pragma solidity ^0.8.0;
 
 import "./utils/Context.sol";
 import "./utils/SafeMath.sol";
+import "./utils/MinterRole.sol";
+import "./utils/BurnerRole.sol";
+import "./utils/Pausable.sol";
 import "./interface/IERC20.sol";
 import "./interface/IREC20Metadata.sol";
 
-contract ERC20 is Context, IERC20, IERC20Metadata {
+contract ERC20 is Context, IERC20, IERC20Metadata, Pausable, MinterRole, BurnerRole {
     using SafeMath for uint256;
 
     string public _name;
@@ -38,7 +41,7 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
         return _balances[account];
     }
 
-    function transfer(address recipient, uint256 amount) public override returns (bool) {
+    function transfer(address recipient, uint256 amount)  public override whenNotPaused returns (bool) {
         _transfer(_msgSender(), recipient, amount);
         return true;
     }
@@ -52,7 +55,7 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
         return true;
     }
 
-    function transferFrom(address sender, address recipient, uint256 amount) public override returns (bool) {
+    function transferFrom(address sender, address recipient, uint256 amount) public override whenNotPaused returns (bool) {
         _transfer(sender, recipient, amount);
         _approve(sender, _msgSender(), _allowances[sender][_msgSender()].sub(amount, "ERC20: transfer amount exceeds allowance"));
         return true;
@@ -77,7 +80,7 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
         emit Transfer(sender, recipient, amount);
     }
 
-    function _mint(address account, uint256 amount) internal {
+    function _mint(address account, uint256 amount) internal onlyMinter {
         require(account != address(0), "ERC20: mint to the zero address");
 
         _totalSupply = _totalSupply.add(amount);
@@ -101,8 +104,27 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
         emit Approval(owner, spender, amount);
     }
 
-    function _burnFrom(address account, uint256 amount) internal {
+    function _burnFrom(address account, uint256 amount) internal onlyBurner {
         _burn(account, amount);
         _approve(account, _msgSender(), _allowances[account][_msgSender()].sub(amount, "ERC20: burn amount exceeds allowance"));
+    }
+
+    function _burnMyToken(uint256 amount) internal onlyBurner {
+        _burn(_msgSender(), amount);
+        _approve(_msgSender(), _msgSender(), _allowances[_msgSender()][_msgSender()].sub(amount, "ERC20: burn amount exceeds allowance"));
+    }
+
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256 amount
+    ) internal virtual {
+    }
+
+    function _afterTokenTransfer(
+        address from,
+        address to,
+        uint256 amount
+    ) internal virtual {
     }
 }

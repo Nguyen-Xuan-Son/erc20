@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 import "./ERC20.sol";
 import "./utils/Context.sol";
 
+
 contract SToken is ERC20 {
     
     uint256 private _maxSupply = 1 * 10**9 * 10**_decimal ;
@@ -15,19 +16,5 @@ contract SToken is ERC20 {
 
     function maxSupply() public view virtual returns (uint256) {
         return _maxSupply;
-    }
-
-    function _beforeTokenTransfer(
-        address from,
-        address to,
-        uint256 amount
-    ) internal virtual {
-    }
-
-    function _afterTokenTransfer(
-        address from,
-        address to,
-        uint256 amount
-    ) internal virtual {
     }
 }
