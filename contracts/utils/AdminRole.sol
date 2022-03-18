@@ -12,12 +12,15 @@ contract AdminRole is Context {
 
     Roles.Role private _admins;
 
-    constructor () {
+    constructor() {
         _addAdmin(_msgSender());
     }
 
     modifier onlyAdmin() {
-        require(isAdmin(_msgSender()), "AdminRole: caller does not have the Admin role");
+        require(
+            isAdmin(_msgSender()),
+            "AdminRole: caller does not have the Admin role"
+        );
         _;
     }
 

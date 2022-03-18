@@ -10,7 +10,7 @@ contract Pausable is Context, AdminRole {
 
     bool private _paused;
 
-    constructor () {
+    constructor() {
         _paused = false;
     }
 

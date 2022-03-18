@@ -12,12 +12,15 @@ contract BurnerRole is Context {
 
     Roles.Role private _burners;
 
-    constructor () {
+    constructor() {
         _addBurner(_msgSender());
     }
 
     modifier onlyBurner() {
-        require(isBurner(_msgSender()), "BurnerRole: caller does not have the Burner role");
+        require(
+            isBurner(_msgSender()),
+            "BurnerRole: caller does not have the Burner role"
+        );
         _;
     }
 
