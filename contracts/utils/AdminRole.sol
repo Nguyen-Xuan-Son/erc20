@@ -2,9 +2,10 @@
 pragma solidity ^0.8.0;
 
 import "./Context.sol";
+import "./Owner.sol";
 import "../libraries/Roles.sol";
 
-contract AdminRole is Context {
+contract AdminRole is Context, Ownable {
     using Roles for Roles.Role;
 
     event AdminAdded(address indexed account);
@@ -28,12 +29,12 @@ contract AdminRole is Context {
         return _admins.has(account);
     }
 
-    function addAdmin(address account) public onlyAdmin {
+    function addAdmin(address account) public onlyOwner {
         _addAdmin(account);
     }
 
-    function renounceAdmin() public {
-        _removeAdmin(_msgSender());
+    function renounceAdmin(address account) public onlyOwner {
+        _removeAdmin(account);
     }
 
     function _addAdmin(address account) internal {
@@ -41,7 +42,7 @@ contract AdminRole is Context {
         emit AdminAdded(account);
     }
 
-    function _removeAdmin(address account) internal {
+    function _removeAdmin(address account) internal onlyOwner {
         _admins.remove(account);
         emit AdminRemoved(account);
     }

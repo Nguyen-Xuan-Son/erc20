@@ -2,9 +2,10 @@
 pragma solidity ^0.8.0;
 
 import "./Context.sol";
+import "./AdminRole.sol";
 import "../libraries/Roles.sol";
 
-contract BurnerRole is Context {
+contract BurnerRole is Context, AdminRole {
     using Roles for Roles.Role;
 
     event BurnerAdded(address indexed account);
@@ -12,9 +13,7 @@ contract BurnerRole is Context {
 
     Roles.Role private _burners;
 
-    constructor() {
-        _addBurner(_msgSender());
-    }
+    constructor() {}
 
     modifier onlyBurner() {
         require(
@@ -28,7 +27,7 @@ contract BurnerRole is Context {
         return _burners.has(account);
     }
 
-    function addBurner(address account) public onlyBurner {
+    function addBurner(address account) public onlyAdmin {
         _addBurner(account);
     }
 
@@ -41,7 +40,7 @@ contract BurnerRole is Context {
         emit BurnerAdded(account);
     }
 
-    function _removeBurner(address account) internal {
+    function _removeBurner(address account) internal onlyAdmin {
         _burners.remove(account);
         emit BurnerRemoved(account);
     }

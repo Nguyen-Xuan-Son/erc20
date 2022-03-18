@@ -2,9 +2,10 @@
 pragma solidity ^0.8.0;
 
 import "./Context.sol";
+import "./AdminRole.sol";
 import "../libraries/Roles.sol";
 
-contract MinterRole is Context {
+contract MinterRole is Context, AdminRole {
     using Roles for Roles.Role;
 
     event MinterAdded(address indexed account);
@@ -12,9 +13,7 @@ contract MinterRole is Context {
 
     Roles.Role private _minters;
 
-    constructor() {
-        _addMinter(_msgSender());
-    }
+    constructor() {}
 
     modifier onlyMinter() {
         require(
@@ -28,7 +27,7 @@ contract MinterRole is Context {
         return _minters.has(account);
     }
 
-    function addMinter(address account) public onlyMinter {
+    function addMinter(address account) public onlyAdmin {
         _addMinter(account);
     }
 
@@ -41,7 +40,7 @@ contract MinterRole is Context {
         emit MinterAdded(account);
     }
 
-    function _removeMinter(address account) internal {
+    function _removeMinter(address account) internal onlyAdmin {
         _minters.remove(account);
         emit MinterRemoved(account);
     }

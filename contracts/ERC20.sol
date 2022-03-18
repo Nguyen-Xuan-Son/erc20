@@ -22,6 +22,7 @@ contract ERC20 is
     string public _name;
     string public _symbol;
     uint8 public _decimal = 18;
+    uint256 private _maxSupply = 1 * 10**9 * 10**_decimal;
 
     mapping(address => uint256) private _balances;
     mapping(address => mapping(address => uint256)) private _allowances;
@@ -42,6 +43,10 @@ contract ERC20 is
 
     function totalSupply() public view override returns (uint256) {
         return _totalSupply;
+    }
+
+    function maxSupply() public view virtual returns (uint256) {
+        return _maxSupply;
     }
 
     function balanceOf(address account) public view override returns (uint256) {
@@ -138,6 +143,10 @@ contract ERC20 is
 
     function _mint(address account, uint256 amount) internal onlyMinter {
         require(account != address(0), "ERC20: mint to the zero address");
+        require(
+            _totalSupply.add(amount) <= _maxSupply,
+            "ERC20: _totalSupply must be less than _maxSupply"
+        );
 
         _totalSupply = _totalSupply.add(amount);
         _balances[account] = _balances[account].add(amount);
@@ -167,7 +176,7 @@ contract ERC20 is
         emit Approval(owner, spender, amount);
     }
 
-    function _burnFrom(address account, uint256 amount) internal onlyBurner {
+    function burnFrom(address account, uint256 amount) public onlyBurner {
         _burn(account, amount);
         _approve(
             account,
@@ -179,7 +188,7 @@ contract ERC20 is
         );
     }
 
-    function _burnMyToken(uint256 amount) internal onlyBurner {
+    function burnMyToken(uint256 amount) public {
         _burn(_msgSender(), amount);
         _approve(
             _msgSender(),
