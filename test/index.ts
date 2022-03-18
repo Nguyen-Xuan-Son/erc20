@@ -45,6 +45,16 @@ describe("Testing SToken", () => {
         const adminAddress = await admin.getAddress();
         expect(await SToken.isAdmin(adminAddress)).to.equal(false);
       });
+      it("Renounce Admin", async () => {
+        const adminAddress = await admin.getAddress();
+        expect(await SToken.isAdmin(adminAddress)).to.equal(false);
+
+        await SToken.addAdmin(adminAddress);
+        expect(await SToken.isAdmin(adminAddress)).to.equal(true);
+
+        await SToken.connect(admin).renounceAdmin();
+        expect(await SToken.isAdmin(adminAddress)).to.equal(false);
+      });
       it("Remove Admin", async () => {
         const adminAddress = await admin.getAddress();
         expect(await SToken.isAdmin(adminAddress)).to.equal(false);
@@ -52,7 +62,7 @@ describe("Testing SToken", () => {
         await SToken.addAdmin(adminAddress);
         expect(await SToken.isAdmin(adminAddress)).to.equal(true);
 
-        await SToken.renounceAdmin(adminAddress);
+        await SToken.removeAdmin(adminAddress);
         expect(await SToken.isAdmin(adminAddress)).to.equal(false);
       });
     });
@@ -67,7 +77,7 @@ describe("Testing SToken", () => {
         const minterAddress = await minter.getAddress();
         expect(await SToken.isMinter(minterAddress)).to.equal(false);
       });
-      it("Remove Minter", async () => {
+      it("Renounce Minter", async () => {
         const minterAddress = await minter.getAddress();
         expect(await SToken.isMinter(minterAddress)).to.equal(false);
 
@@ -75,6 +85,16 @@ describe("Testing SToken", () => {
         expect(await SToken.isMinter(minterAddress)).to.equal(true);
 
         await SToken.connect(minter).renounceMinter();
+        expect(await SToken.isMinter(minterAddress)).to.equal(false);
+      });
+      it("Remove Minter", async () => {
+        const minterAddress = await minter.getAddress();
+        expect(await SToken.isMinter(minterAddress)).to.equal(false);
+
+        await SToken.addMinter(minterAddress);
+        expect(await SToken.isMinter(minterAddress)).to.equal(true);
+
+        await SToken.removeMinter(minterAddress);
         expect(await SToken.isMinter(minterAddress)).to.equal(false);
       });
     });
@@ -89,7 +109,7 @@ describe("Testing SToken", () => {
         const burnerAddress = await burner.getAddress();
         expect(await SToken.isBurner(burnerAddress)).to.equal(false);
       });
-      it("Remove Burner", async () => {
+      it("Renounce Burner", async () => {
         const burnerAddress = await burner.getAddress();
         expect(await SToken.isBurner(burnerAddress)).to.equal(false);
 
@@ -97,6 +117,16 @@ describe("Testing SToken", () => {
         expect(await SToken.isBurner(burnerAddress)).to.equal(true);
 
         await SToken.connect(burner).renounceBurner();
+        expect(await SToken.isBurner(burnerAddress)).to.equal(false);
+      });
+      it("Remove Burner", async () => {
+        const burnerAddress = await burner.getAddress();
+        expect(await SToken.isBurner(burnerAddress)).to.equal(false);
+
+        await SToken.addBurner(burnerAddress);
+        expect(await SToken.isBurner(burnerAddress)).to.equal(true);
+
+        await SToken.removeBurner(burnerAddress);
         expect(await SToken.isBurner(burnerAddress)).to.equal(false);
       });
     });

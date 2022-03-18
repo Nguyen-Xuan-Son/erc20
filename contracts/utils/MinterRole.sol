@@ -40,7 +40,7 @@ contract MinterRole is Context, AdminRole {
         _removeMinter(_msgSender());
     }
 
-    function removeMinter(address account) internal onlyAdmin {
+    function removeMinter(address account) public onlyAdmin {
         _removeMinter(account);
     }
 

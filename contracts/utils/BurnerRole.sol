@@ -40,7 +40,7 @@ contract BurnerRole is Context, AdminRole {
         _removeBurner(_msgSender());
     }
 
-    function removeBurner(address account) internal onlyAdmin {
+    function removeBurner(address account) public onlyAdmin {
         _removeBurner(account);
     }
 
