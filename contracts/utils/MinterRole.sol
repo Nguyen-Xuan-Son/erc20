@@ -31,16 +31,20 @@ contract MinterRole is Context, AdminRole {
         _addMinter(account);
     }
 
-    function renounceMinter() public {
-        _removeMinter(_msgSender());
-    }
-
     function _addMinter(address account) internal {
         _minters.add(account);
         emit MinterAdded(account);
     }
 
-    function _removeMinter(address account) internal onlyAdmin {
+    function renounceMinter() public {
+        _removeMinter(_msgSender());
+    }
+
+    function removeMinter(address account) internal onlyAdmin {
+        _removeMinter(account);
+    }
+
+    function _removeMinter(address account) internal {
         _minters.remove(account);
         emit MinterRemoved(account);
     }

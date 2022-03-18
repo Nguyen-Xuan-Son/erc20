@@ -58,11 +58,56 @@ describe("Testing SToken", () => {
     });
 
     describe("Minter", () => {
-      it("Transfer", async () => {});
+      it("Set Minter", async () => {
+        const minterAddress = await minter.getAddress();
+        await SToken.addMinter(minterAddress);
+        expect(await SToken.isMinter(minterAddress)).to.equal(true);
+      });
+      it("Non Minter", async () => {
+        const minterAddress = await minter.getAddress();
+        expect(await SToken.isMinter(minterAddress)).to.equal(false);
+      });
+      it("Remove Minter", async () => {
+        const minterAddress = await minter.getAddress();
+        expect(await SToken.isMinter(minterAddress)).to.equal(false);
+
+        await SToken.addMinter(minterAddress);
+        expect(await SToken.isMinter(minterAddress)).to.equal(true);
+
+        await SToken.connect(minter).renounceMinter();
+        expect(await SToken.isMinter(minterAddress)).to.equal(false);
+      });
     });
 
-    describe("Burner", () => {
-      it("Transfer", async () => {});
+    describe("Burner", async () => {
+      it("Set Burner", async () => {
+        const burnerAddress = await burner.getAddress();
+        await SToken.addBurner(burnerAddress);
+        expect(await SToken.isBurner(burnerAddress)).to.equal(true);
+      });
+      it("Non Burner", async () => {
+        const burnerAddress = await burner.getAddress();
+        expect(await SToken.isBurner(burnerAddress)).to.equal(false);
+      });
+      it("Remove Burner", async () => {
+        const burnerAddress = await burner.getAddress();
+        expect(await SToken.isBurner(burnerAddress)).to.equal(false);
+
+        await SToken.addBurner(burnerAddress);
+        expect(await SToken.isBurner(burnerAddress)).to.equal(true);
+
+        await SToken.connect(burner).renounceBurner();
+        expect(await SToken.isBurner(burnerAddress)).to.equal(false);
+      });
+    });
+
+    describe("User", async () => {
+      it("Non Role", async () => {
+        const userAddress = await user.getAddress();
+        expect(await SToken.isBurner(userAddress)).to.equal(false);
+        expect(await SToken.isAdmin(userAddress)).to.equal(false);
+        expect(await SToken.isMinter(userAddress)).to.equal(false);
+      });
     });
   });
 
