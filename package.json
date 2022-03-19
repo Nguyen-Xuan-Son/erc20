@@ -32,5 +32,10 @@
     "ts-node": "^10.1.0",
     "typechain": "^5.1.2",
     "typescript": "^4.5.2"
+  },
+  "scripts": {
+    "test": "npx hardhat test",
+    "compile": "npx hardhat compile",
+    "bscTestnet:deploy": "npx hardhat run --network bscTestnet scripts/*"
   }
 }

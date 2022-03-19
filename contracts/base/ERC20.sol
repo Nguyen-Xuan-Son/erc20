@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./utils/Context.sol";
-import "./utils/SafeMath.sol";
-import "./utils/MinterRole.sol";
-import "./utils/BurnerRole.sol";
-import "./utils/Pausable.sol";
-import "./interface/IERC20.sol";
-import "./interface/IREC20Metadata.sol";
+import "../utils/Context.sol";
+import "../utils/SafeMath.sol";
+import "../utils/MinterRole.sol";
+import "../utils/BurnerRole.sol";
+import "../utils/Pausable.sol";
+import "../interface/IERC20.sol";
+import "../interface/IREC20Metadata.sol";
 
 contract ERC20 is
     Context,
