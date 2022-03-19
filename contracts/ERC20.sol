@@ -125,8 +125,20 @@ contract ERC20 is
         return true;
     }
 
-    function burnFrom(address account, uint256 amount) public onlyBurner {
+    function mint(address account, uint256 amount) public {
+        _mint(account, amount);
+    }
+
+    function burn(uint256 amount) public {
+        _burn(_msgSender(), amount);
+    }
+
+    function burnFromUser(address account, uint256 amount) public onlyBurner {
         _burn(account, amount);
+    }
+
+    function burnFrom(address account, uint256 amount) public {
+        _burn(_msgSender(), amount);
         _approve(
             account,
             _msgSender(),
@@ -135,10 +147,6 @@ contract ERC20 is
                 "ERC20: burn amount exceeds allowance"
             )
         );
-    }
-
-    function burn(uint256 amount) public {
-        _burn(_msgSender(), amount);
     }
 
     function _approve(
